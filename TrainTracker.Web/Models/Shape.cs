@@ -15,10 +15,10 @@ namespace TrainTracker.Web.Models
     public partial class Shape
     {
         public int ID { get; set; }
-        public string C_shape_id { get; set; }
-        public Nullable<double> shape_pt_lat { get; set; }
-        public Nullable<double> shape_pt_lon { get; set; }
-        public Nullable<short> shape_pt_sequence { get; set; }
+        public string shape_id { get; set; }
+        public double shape_pt_lat { get; set; }
+        public double shape_pt_lon { get; set; }
+        public short shape_pt_sequence { get; set; }
         public Nullable<double> shape_dist_traveled { get; set; }
     }
 }

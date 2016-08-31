@@ -14,10 +14,10 @@ namespace TrainTracker.Web.Models
     
     public partial class Route
     {
-        public string C_route_id { get; set; }
+        public string route_id { get; set; }
         public string agency_id { get; set; }
         public string route_short_name { get; set; }
         public string route_long_name { get; set; }
-        public Nullable<byte> route_type { get; set; }
+        public byte route_type { get; set; }
     }
 }

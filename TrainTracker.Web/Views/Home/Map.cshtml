@@ -1,0 +1,121 @@
+﻿
+@{
+    ViewBag.Title = "Map";
+}
+<h2>Chat</h2>
+<div class="container">
+    <input type="text" id="message" value="8692.T0.2-FKN-H-mjp-1.20.R"/>
+    <input type="text" id="time" value="20:16:00" />
+    <input type="button" id="sendmessage" value="Send"/>
+    <input type="button" id="startTimer" value="Start Timer" />
+    <ul id="discussion"></ul>
+    <div id="map" style="width: 1248px; height: 768px;"></div>
+
+</div>
+
+<h2>Map</h2>
+
+@section scripts{
+    <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBblUvtCvX4S99whslm-TsWyjVMdlM2eBo&callback=initMap" async defer></script>
+    <script src="~/signalr/hubs"></script>
+    <script>
+        var map;
+        var trainHub = null;
+        var markers = [];
+        var poly = null;
+        var hour = 0;
+        var min = 0;
+        var sec = 0;
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: -34.397, lng: 150.644 },
+                zoom: 8
+            });
+        }
+        function addMarker(location) {
+            var marker = new google.maps.Marker({
+                position: location,
+                map: map
+            });
+            markers.push(marker);
+        }
+
+        // Sets the map on all markers in the array.
+        function setMapOnAll(map) {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(map);
+            }
+        }
+
+        // Removes the markers from the map, but keeps them in the array.
+        function clearMarkers() {
+            setMapOnAll(null);
+        }
+
+        // Deletes all markers in the array by removing references to them.
+        function deleteMarkers() {
+            clearMarkers();
+            markers = [];
+        }
+
+        function RequestData(tripId, time) {
+            trainHub.server.requestTrainLocations(tripId, time);
+        }
+
+        function update() {
+            sec += 10;
+            if (sec >= 60) {
+                sec = 0;
+                min++;
+            }
+            if (min >= 60) {
+                min = 0;
+                hour++;
+            }
+            if (hour >= 24) {
+                hour = 0;
+            }
+            $("#time").val(hour + ":" + min + ":" + sec);
+            RequestData($("#message").val(), $("#time").val());
+            setTimeout(update, 1000);
+        }
+
+        $(function() {
+            // Reference the auto-generated proxy for the hub.
+            trainHub = $.connection.trainHub;
+            // Create a function that the hub can call back to display messages.
+            trainHub.client.updateTrainLocations = function(lastStopStop, nextStopStop, shapesUntilNextStation, trainPos) {
+                deleteMarkers();
+
+                var path = [];
+                for (var i = 0; i < shapesUntilNextStation.length; i++) {
+                    path.push({ lat: shapesUntilNextStation[i].shape_pt_lat, lng: shapesUntilNextStation[i].shape_pt_lon });
+                }
+
+                addMarker({ lat: lastStopStop.stop_lat, lng: lastStopStop.stop_lon });
+                addMarker({ lat: nextStopStop.stop_lat, lng: nextStopStop.stop_lon });
+                addMarker({ lat: trainPos.Latitude, lng: trainPos.Longitude });
+                setMapOnAll(map);
+                map.setCenter({ lat: trainPos.Latitude, lng: trainPos.Longitude });
+            };
+            $.connection.hub.start().done(function () {
+                var values = $("#time").val().split(":");
+                hour = parseInt(values[0]);
+                min = parseInt(values[1]);
+                sec = parseInt(values[2]);
+
+                $('#sendmessage').click(function() {
+                    // Call the Send method on the hub.
+                    RequestData($("#message").val(), $("#time").val());
+                    // Clear text box and reset focus for next comment.
+                });
+                $('#startTimer').click(function () {
+                    // Call the Send method on the hub.
+                    setTimeout(update, 1000);
+                    // Clear text box and reset focus for next comment.
+                });
+            });
+            });
+    </script>
+}

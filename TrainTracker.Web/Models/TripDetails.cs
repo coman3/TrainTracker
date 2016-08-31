@@ -11,11 +11,11 @@ namespace TrainTracker.Web.Models
         {
             Id = trip.ID;
             trip_id = trip.trip_id;
-            C_route_id = trip.C_route_id;
+            route_id = trip.route_id;
             shape_id = trip.shape_id;
             service_id = trip.service_id;
             Route = repository.GetTripRoute(trip);
-            Service = repository.Calendars.First(x => x.C_service_id == trip.service_id);
+            Service = repository.Calendars.First(x => x.service_id == trip.service_id);
             trip_headsign = trip.trip_headsign;
             direction_id = trip.direction_id;
         }

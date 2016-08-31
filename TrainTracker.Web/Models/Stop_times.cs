@@ -15,11 +15,11 @@ namespace TrainTracker.Web.Models
     public partial class Stop_times
     {
         public int ID { get; set; }
-        public string C_trip_id { get; set; }
+        public string trip_id { get; set; }
         public Nullable<System.DateTime> arrival_time { get; set; }
         public Nullable<System.DateTime> departure_time { get; set; }
-        public Nullable<int> stop_id { get; set; }
-        public Nullable<short> stop_sequence { get; set; }
+        public int stop_id { get; set; }
+        public short stop_sequence { get; set; }
         public string stop_headsign { get; set; }
         public Nullable<byte> pickup_type { get; set; }
         public Nullable<byte> drop_off_type { get; set; }

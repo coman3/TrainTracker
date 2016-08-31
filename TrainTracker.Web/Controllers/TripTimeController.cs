@@ -25,8 +25,9 @@ namespace TrainTracker.Web.Controllers
         {
             return PageData(data,
                 _repository.StopTimes.Where(x =>
-                    x.C_trip_id == data.Id &&
-                    x.arrival_time.HasValue).ToList()
+                    x.trip_id == data.Id &&
+                    x.arrival_time.HasValue)
+                    .ToList()
                     .Where(x => !data.AfterTime.HasValue ||
                                 data.AfterTime.Value.TimeOfDay < x.arrival_time.Value.TimeOfDay
                     ).OrderBy(x => x.arrival_time));

@@ -19,8 +19,8 @@ namespace TrainTracker.Web.Controllers
         {
             return PageData(data,
                     _repository.Routes
-                    .Where(x => x.route_type.HasValue && x.route_type.Value == data.RouteType)
-                    .OrderBy(x => x.C_route_id));
+                    .Where(x => x.route_type == data.RouteType)
+                    .OrderBy(x => x.route_id));
         }
 
         public class RouteRequestData : RequestData

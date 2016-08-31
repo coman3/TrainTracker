@@ -15,8 +15,8 @@ namespace TrainTracker.Web.Models
     public partial class Calendar_dates
     {
         public int id { get; set; }
-        public string C_service_id { get; set; }
+        public string service_id { get; set; }
         public string date { get; set; }
-        public Nullable<byte> exception_type { get; set; }
+        public byte exception_type { get; set; }
     }
 }

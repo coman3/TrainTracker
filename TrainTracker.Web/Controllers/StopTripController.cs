@@ -18,7 +18,7 @@ namespace TrainTracker.Web.Controllers
         protected override PagedList<Trip> GetData(StopTripRequest data)
         {
             return PageData(data,
-                _repository.GetStopTrips(new Stop {C_stop_id = data.Id})
+                _repository.GetStopTrips(new Stop {stop_id = data.Id})
                 .OrderBy(x => x.ID));
         }
 

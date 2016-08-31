@@ -24,51 +24,65 @@ namespace TrainTracker.Web.Repository
             
         }
 
-        public IEnumerable<Trip> GetRouteTrips(Route route)
+        public IEnumerable<Trip> GetRouteTrips(Route route, DateTime? filterForDay)
         {
-            return Trips.Where(x => x.C_route_id == route.C_route_id);
+            return
+                Trips.Where(x => x.route_id == route.route_id)
+                    .ToList()
+                    .Where(x => !filterForDay.HasValue || IsTripRunning(x, filterForDay));
         }
         public IEnumerable<Shape> GetTripShapes(Trip trip)
         {
-            return Shapes.Where(x => x.C_shape_id == trip.shape_id);
+            return Shapes.Where(x => x.shape_id == trip.shape_id).OrderBy(x=> x.shape_pt_sequence);
         }
         public Route GetTripRoute(Trip trip)
         {
-            return Routes.First(x => x.C_route_id == trip.C_route_id);
+            return Routes.First(x => x.route_id == trip.route_id);
         }
         public IEnumerable<Stop> GetTripStops(Trip trip)
         {
             return
-                StopTimes.Where(x => x.C_trip_id == trip.trip_id)
-                    .SelectMany(x => Stops.Where(t => t.C_stop_id == x.stop_id.Value));
+                StopTimes.Where(x => x.trip_id == trip.trip_id)
+                    .SelectMany(x => Stops.Where(t => t.stop_id == x.stop_id));
             //Select All Stop Times with tripid = trip.tripid and group to "TripStopTimes"
             //Select all Stops from "TripStopTimes" where stopid is "TripStopTimes".stopid.
         }
+        public IEnumerable<Stop_times> GetTripStopTimes(Trip trip)
+        {
+            return
+                StopTimes.Where(x => x.trip_id == trip.trip_id);
+            //Select All Stop Times with tripid = trip.tripid and group to "TripStopTimes"
+            //Select all Stops from "TripStopTimes" where stopid is "TripStopTimes".stopid.
+        }
+
         public bool IsTripRunning(Trip trip, DateTime? atTime = null)
         {
-            if(atTime == null)
+            if (atTime == null)
                 atTime = DateTime.Now;
-            var calDate = CalendarDates.Any(x => x.C_service_id == trip.service_id && x.date == atTime.Value.ToString("yyyyMMdd"));
+            var calDate = CalendarDates.ToList().Any(
+                    x => x.service_id == trip.service_id &&
+                     x.date == atTime.Value.ToString("yyyyMMdd") &&
+                      x.exception_type == 2);
             if (calDate) return false;
 
-            var cal = Calendars.First(x => x.C_service_id == trip.service_id);
+            var cal = Calendars.First(x => x.service_id == trip.service_id);
             var day = atTime.Value.DayOfWeek;
             switch (day)
             {
                 case DayOfWeek.Sunday:
-                    return cal.sunday.HasValue && cal.sunday.Value;
+                    return cal.sunday;
                 case DayOfWeek.Monday:
-                    return cal.monday.HasValue && cal.monday.Value;
+                    return  cal.monday;
                 case DayOfWeek.Tuesday:
-                    return cal.tuesday.HasValue && cal.tuesday.Value;
+                    return cal.tuesday;
                 case DayOfWeek.Wednesday:
-                    return cal.wednesday.HasValue && cal.wednesday.Value;
+                    return cal.wednesday;
                 case DayOfWeek.Thursday:
-                    return cal.thursday.HasValue && cal.thursday.Value;
+                    return cal.thursday;
                 case DayOfWeek.Friday:
-                    return cal.friday.HasValue && cal.friday.Value;
+                    return cal.friday;
                 case DayOfWeek.Saturday:
-                    return cal.saturday.HasValue && cal.saturday.Value;
+                    return cal.saturday;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -77,8 +91,8 @@ namespace TrainTracker.Web.Repository
         public IEnumerable<Trip> GetStopTrips(Stop stop)
         {
             return
-                StopTimes.Where(x => x.stop_id.HasValue && x.stop_id.Value == stop.C_stop_id)
-                    .SelectMany(x => Trips.Where(t => t.trip_id == x.C_trip_id));
+                StopTimes.Where(x => x.stop_id == stop.stop_id)
+                    .SelectMany(x => Trips.Where(t => t.trip_id == x.trip_id));
             //Select All Stop Times with stopid = stop.stopid and group to "StopStopTimes"
             //Select all trips from "StopStopTimes" where tripid is "StopStopTimes".tripid.
         }

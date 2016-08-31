@@ -14,10 +14,9 @@ namespace TrainTracker.Web.Models
     
     public partial class Stop
     {
-        public int C_stop_id { get; set; }
+        public int stop_id { get; set; }
         public string stop_name { get; set; }
-        public Nullable<double> stop_lat { get; set; }
-        public Nullable<double> stop_lon { get; set; }
-
+        public double stop_lat { get; set; }
+        public double stop_lon { get; set; }
     }
 }

@@ -19,8 +19,7 @@ namespace TrainTracker.Web.Controllers
         {
             return PageData(data, 
                 _repository.Stops
-                .Where(x=> x.stop_lat.HasValue && x.stop_lon.HasValue)
-                .OrderBy(x => Maths.Distance(data.NearLatitude, data.NearLongitude, x.stop_lat.Value, x.stop_lon.Value)));
+                .OrderBy(x => Maths.Distance(data.NearLatitude, data.NearLongitude, x.stop_lat, x.stop_lon)));
         }
 
         public class StopRequestData : RequestData

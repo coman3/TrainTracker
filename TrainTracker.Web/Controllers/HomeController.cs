@@ -14,5 +14,11 @@ namespace TrainTracker.Web.Controllers
 
             return View();
         }
+        public ActionResult Map()
+        {
+            ViewBag.Title = "Train Map";
+
+            return View();
+        }
     }
 }

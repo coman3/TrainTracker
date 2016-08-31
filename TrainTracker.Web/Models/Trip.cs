@@ -15,7 +15,7 @@ namespace TrainTracker.Web.Models
     public partial class Trip
     {
         public int ID { get; set; }
-        public string C_route_id { get; set; }
+        public string route_id { get; set; }
         public string service_id { get; set; }
         public string trip_id { get; set; }
         public string shape_id { get; set; }

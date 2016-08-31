@@ -10,24 +10,24 @@
             <PropertyRef Name="﻿service_id" />
           </Key>
           <Property Name="﻿service_id" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="monday" Type="bit" />
-          <Property Name="tuesday" Type="bit" />
-          <Property Name="wednesday" Type="bit" />
-          <Property Name="thursday" Type="bit" />
-          <Property Name="friday" Type="bit" />
-          <Property Name="saturday" Type="bit" />
-          <Property Name="sunday" Type="bit" />
-          <Property Name="start_date" Type="nvarchar" MaxLength="255" />
-          <Property Name="end_date" Type="nvarchar" MaxLength="255" />
+          <Property Name="monday" Type="bit" Nullable="false" />
+          <Property Name="tuesday" Type="bit" Nullable="false" />
+          <Property Name="wednesday" Type="bit" Nullable="false" />
+          <Property Name="thursday" Type="bit" Nullable="false" />
+          <Property Name="friday" Type="bit" Nullable="false" />
+          <Property Name="saturday" Type="bit" Nullable="false" />
+          <Property Name="sunday" Type="bit" Nullable="false" />
+          <Property Name="start_date" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="end_date" Type="nvarchar" MaxLength="255" Nullable="false" />
         </EntityType>
         <EntityType Name="Calendar_dates">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="﻿service_id" Type="nvarchar" MaxLength="255" />
-          <Property Name="date" Type="nvarchar" MaxLength="255" />
-          <Property Name="exception_type" Type="tinyint" />
+          <Property Name="﻿service_id" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="date" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="exception_type" Type="tinyint" Nullable="false" />
         </EntityType>
         <EntityType Name="Routes">
           <Key>
@@ -35,9 +35,9 @@
           </Key>
           <Property Name="﻿route_id" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="agency_id" Type="nvarchar" MaxLength="255" />
-          <Property Name="route_short_name" Type="nvarchar" MaxLength="255" />
-          <Property Name="route_long_name" Type="nvarchar" MaxLength="255" />
-          <Property Name="route_type" Type="tinyint" />
+          <Property Name="route_short_name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="route_long_name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="route_type" Type="tinyint" Nullable="false" />
         </EntityType>
         <EntityType Name="Shapes">
           <Key>
@@ -45,9 +45,9 @@
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="﻿shape_id" Type="nvarchar" MaxLength="255" />
-          <Property Name="shape_pt_lat" Type="float" />
-          <Property Name="shape_pt_lon" Type="float" />
-          <Property Name="shape_pt_sequence" Type="smallint" />
+          <Property Name="shape_pt_lat" Type="float" Nullable="false" />
+          <Property Name="shape_pt_lon" Type="float" Nullable="false" />
+          <Property Name="shape_pt_sequence" Type="smallint" Nullable="false" />
           <Property Name="shape_dist_traveled" Type="float" />
         </EntityType>
         <EntityType Name="Stop_times">
@@ -55,11 +55,11 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="﻿trip_id" Type="nvarchar" MaxLength="255" />
+          <Property Name="﻿trip_id" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="arrival_time" Type="datetime" />
           <Property Name="departure_time" Type="datetime" />
-          <Property Name="stop_id" Type="int" />
-          <Property Name="stop_sequence" Type="smallint" />
+          <Property Name="stop_id" Type="int" Nullable="false" />
+          <Property Name="stop_sequence" Type="smallint" Nullable="false" />
           <Property Name="stop_headsign" Type="nvarchar" MaxLength="255" />
           <Property Name="pickup_type" Type="tinyint" />
           <Property Name="drop_off_type" Type="tinyint" />
@@ -70,18 +70,18 @@
             <PropertyRef Name="﻿stop_id" />
           </Key>
           <Property Name="﻿stop_id" Type="int" Nullable="false" />
-          <Property Name="stop_name" Type="nvarchar" MaxLength="255" />
-          <Property Name="stop_lat" Type="float" />
-          <Property Name="stop_lon" Type="float" />
+          <Property Name="stop_name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="stop_lat" Type="float" Nullable="false" />
+          <Property Name="stop_lon" Type="float" Nullable="false" />
         </EntityType>
         <EntityType Name="Trips">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="﻿route_id" Type="nvarchar" MaxLength="255" />
-          <Property Name="service_id" Type="nvarchar" MaxLength="255" />
-          <Property Name="trip_id" Type="nvarchar" MaxLength="255" />
+          <Property Name="﻿route_id" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="service_id" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="trip_id" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="shape_id" Type="nvarchar" MaxLength="255" />
           <Property Name="trip_headsign" Type="nvarchar" MaxLength="255" />
           <Property Name="direction_id" Type="bit" />
@@ -182,47 +182,47 @@
         </ComplexType>
         <EntityType Name="Calendar">
           <Key>
-            <PropertyRef Name="C_service_id" />
+            <PropertyRef Name="service_id" />
           </Key>
-          <Property Name="C_service_id" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="monday" Type="Boolean" />
-          <Property Name="tuesday" Type="Boolean" />
-          <Property Name="wednesday" Type="Boolean" />
-          <Property Name="thursday" Type="Boolean" />
-          <Property Name="friday" Type="Boolean" />
-          <Property Name="saturday" Type="Boolean" />
-          <Property Name="sunday" Type="Boolean" />
-          <Property Name="start_date" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="end_date" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="service_id" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="monday" Type="Boolean" Nullable="false" />
+          <Property Name="tuesday" Type="Boolean" Nullable="false" />
+          <Property Name="wednesday" Type="Boolean" Nullable="false" />
+          <Property Name="thursday" Type="Boolean" Nullable="false" />
+          <Property Name="friday" Type="Boolean" Nullable="false" />
+          <Property Name="saturday" Type="Boolean" Nullable="false" />
+          <Property Name="sunday" Type="Boolean" Nullable="false" />
+          <Property Name="start_date" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="end_date" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="Calendar_dates">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="C_service_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="date" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="exception_type" Type="Byte" />
+          <Property Name="service_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="date" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="exception_type" Type="Byte" Nullable="false" />
         </EntityType>
         <EntityType Name="Route">
           <Key>
-            <PropertyRef Name="C_route_id" />
+            <PropertyRef Name="route_id" />
           </Key>
-          <Property Name="C_route_id" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="route_id" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="agency_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="route_short_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="route_long_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="route_type" Type="Byte" />
+          <Property Name="route_short_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="route_long_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="route_type" Type="Byte" Nullable="false" />
         </EntityType>
         <EntityType Name="Shape">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="C_shape_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="shape_pt_lat" Type="Double" />
-          <Property Name="shape_pt_lon" Type="Double" />
-          <Property Name="shape_pt_sequence" Type="Int16" />
+          <Property Name="shape_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="shape_pt_lat" Type="Double" Nullable="false" />
+          <Property Name="shape_pt_lon" Type="Double" Nullable="false" />
+          <Property Name="shape_pt_sequence" Type="Int16" Nullable="false" />
           <Property Name="shape_dist_traveled" Type="Double" />
         </EntityType>
         <EntityType Name="Stop_times">
@@ -230,11 +230,11 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="C_trip_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="trip_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="arrival_time" Type="DateTime" Precision="3" />
           <Property Name="departure_time" Type="DateTime" Precision="3" />
-          <Property Name="stop_id" Type="Int32" />
-          <Property Name="stop_sequence" Type="Int16" />
+          <Property Name="stop_id" Type="Int32" Nullable="false" />
+          <Property Name="stop_sequence" Type="Int16" Nullable="false" />
           <Property Name="stop_headsign" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="pickup_type" Type="Byte" />
           <Property Name="drop_off_type" Type="Byte" />
@@ -242,21 +242,21 @@
         </EntityType>
         <EntityType Name="Stop">
           <Key>
-            <PropertyRef Name="C_stop_id" />
+            <PropertyRef Name="stop_id" />
           </Key>
-          <Property Name="C_stop_id" Type="Int32" Nullable="false" />
-          <Property Name="stop_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="stop_lat" Type="Double" />
-          <Property Name="stop_lon" Type="Double" />
+          <Property Name="stop_id" Type="Int32" Nullable="false" />
+          <Property Name="stop_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="stop_lat" Type="Double" Nullable="false" />
+          <Property Name="stop_lon" Type="Double" Nullable="false" />
         </EntityType>
         <EntityType Name="Trip">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="C_route_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="service_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="trip_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="route_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="service_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="trip_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="shape_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="trip_headsign" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="direction_id" Type="Boolean" />
@@ -303,7 +303,7 @@
                 <ScalarProperty Name="wednesday" ColumnName="wednesday" />
                 <ScalarProperty Name="tuesday" ColumnName="tuesday" />
                 <ScalarProperty Name="monday" ColumnName="monday" />
-                <ScalarProperty Name="C_service_id" ColumnName="﻿service_id" />
+                <ScalarProperty Name="service_id" ColumnName="﻿service_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -312,7 +312,7 @@
               <MappingFragment StoreEntitySet="Calendar_dates">
                 <ScalarProperty Name="exception_type" ColumnName="exception_type" />
                 <ScalarProperty Name="date" ColumnName="date" />
-                <ScalarProperty Name="C_service_id" ColumnName="﻿service_id" />
+                <ScalarProperty Name="service_id" ColumnName="﻿service_id" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -324,7 +324,7 @@
                 <ScalarProperty Name="route_long_name" ColumnName="route_long_name" />
                 <ScalarProperty Name="route_short_name" ColumnName="route_short_name" />
                 <ScalarProperty Name="agency_id" ColumnName="agency_id" />
-                <ScalarProperty Name="C_route_id" ColumnName="﻿route_id" />
+                <ScalarProperty Name="route_id" ColumnName="﻿route_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -335,7 +335,7 @@
                 <ScalarProperty Name="shape_pt_sequence" ColumnName="shape_pt_sequence" />
                 <ScalarProperty Name="shape_pt_lon" ColumnName="shape_pt_lon" />
                 <ScalarProperty Name="shape_pt_lat" ColumnName="shape_pt_lat" />
-                <ScalarProperty Name="C_shape_id" ColumnName="﻿shape_id" />
+                <ScalarProperty Name="shape_id" ColumnName="﻿shape_id" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -351,7 +351,7 @@
                 <ScalarProperty Name="stop_id" ColumnName="stop_id" />
                 <ScalarProperty Name="departure_time" ColumnName="departure_time" />
                 <ScalarProperty Name="arrival_time" ColumnName="arrival_time" />
-                <ScalarProperty Name="C_trip_id" ColumnName="﻿trip_id" />
+                <ScalarProperty Name="trip_id" ColumnName="﻿trip_id" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -362,7 +362,7 @@
                 <ScalarProperty Name="stop_lon" ColumnName="stop_lon" />
                 <ScalarProperty Name="stop_lat" ColumnName="stop_lat" />
                 <ScalarProperty Name="stop_name" ColumnName="stop_name" />
-                <ScalarProperty Name="C_stop_id" ColumnName="﻿stop_id" />
+                <ScalarProperty Name="stop_id" ColumnName="﻿stop_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -374,7 +374,7 @@
                 <ScalarProperty Name="shape_id" ColumnName="shape_id" />
                 <ScalarProperty Name="trip_id" ColumnName="trip_id" />
                 <ScalarProperty Name="service_id" ColumnName="service_id" />
-                <ScalarProperty Name="C_route_id" ColumnName="﻿route_id" />
+                <ScalarProperty Name="route_id" ColumnName="﻿route_id" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
