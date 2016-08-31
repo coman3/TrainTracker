@@ -1,0 +1,404 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Models.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Calendar">
+          <Key>
+            <PropertyRef Name="﻿service_id" />
+          </Key>
+          <Property Name="﻿service_id" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="monday" Type="bit" />
+          <Property Name="tuesday" Type="bit" />
+          <Property Name="wednesday" Type="bit" />
+          <Property Name="thursday" Type="bit" />
+          <Property Name="friday" Type="bit" />
+          <Property Name="saturday" Type="bit" />
+          <Property Name="sunday" Type="bit" />
+          <Property Name="start_date" Type="nvarchar" MaxLength="255" />
+          <Property Name="end_date" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Calendar_dates">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="﻿service_id" Type="nvarchar" MaxLength="255" />
+          <Property Name="date" Type="nvarchar" MaxLength="255" />
+          <Property Name="exception_type" Type="tinyint" />
+        </EntityType>
+        <EntityType Name="Routes">
+          <Key>
+            <PropertyRef Name="﻿route_id" />
+          </Key>
+          <Property Name="﻿route_id" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="agency_id" Type="nvarchar" MaxLength="255" />
+          <Property Name="route_short_name" Type="nvarchar" MaxLength="255" />
+          <Property Name="route_long_name" Type="nvarchar" MaxLength="255" />
+          <Property Name="route_type" Type="tinyint" />
+        </EntityType>
+        <EntityType Name="Shapes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="﻿shape_id" Type="nvarchar" MaxLength="255" />
+          <Property Name="shape_pt_lat" Type="float" />
+          <Property Name="shape_pt_lon" Type="float" />
+          <Property Name="shape_pt_sequence" Type="smallint" />
+          <Property Name="shape_dist_traveled" Type="float" />
+        </EntityType>
+        <EntityType Name="Stop_times">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="﻿trip_id" Type="nvarchar" MaxLength="255" />
+          <Property Name="arrival_time" Type="datetime" />
+          <Property Name="departure_time" Type="datetime" />
+          <Property Name="stop_id" Type="int" />
+          <Property Name="stop_sequence" Type="smallint" />
+          <Property Name="stop_headsign" Type="nvarchar" MaxLength="255" />
+          <Property Name="pickup_type" Type="tinyint" />
+          <Property Name="drop_off_type" Type="tinyint" />
+          <Property Name="shape_dist_traveled" Type="float" />
+        </EntityType>
+        <EntityType Name="Stops">
+          <Key>
+            <PropertyRef Name="﻿stop_id" />
+          </Key>
+          <Property Name="﻿stop_id" Type="int" Nullable="false" />
+          <Property Name="stop_name" Type="nvarchar" MaxLength="255" />
+          <Property Name="stop_lat" Type="float" />
+          <Property Name="stop_lon" Type="float" />
+        </EntityType>
+        <EntityType Name="Trips">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="﻿route_id" Type="nvarchar" MaxLength="255" />
+          <Property Name="service_id" Type="nvarchar" MaxLength="255" />
+          <Property Name="trip_id" Type="nvarchar" MaxLength="255" />
+          <Property Name="shape_id" Type="nvarchar" MaxLength="255" />
+          <Property Name="trip_headsign" Type="nvarchar" MaxLength="255" />
+          <Property Name="direction_id" Type="bit" />
+        </EntityType>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="ModelsStoreContainer">
+          <EntitySet Name="Calendar" EntityType="Self.Calendar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Calendar_dates" EntityType="Self.Calendar_dates" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Routes" EntityType="Self.Routes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Shapes" EntityType="Self.Shapes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Stop_times" EntityType="Self.Stop_times" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Stops" EntityType="Self.Stops" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Trips" EntityType="Self.Trips" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Models" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TrackTracker" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(Models.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(Models.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+          <EntitySet Name="Calendars" EntityType="Models.Calendar" />
+          <EntitySet Name="Calendar_dates" EntityType="Models.Calendar_dates" />
+          <EntitySet Name="Routes" EntityType="Models.Route" />
+          <EntitySet Name="Shapes" EntityType="Models.Shape" />
+          <EntitySet Name="Stop_times" EntityType="Models.Stop_times" />
+          <EntitySet Name="Stops" EntityType="Models.Stop" />
+          <EntitySet Name="Trips" EntityType="Models.Trip" />
+        </EntityContainer>
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="Calendar">
+          <Key>
+            <PropertyRef Name="C_service_id" />
+          </Key>
+          <Property Name="C_service_id" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="monday" Type="Boolean" />
+          <Property Name="tuesday" Type="Boolean" />
+          <Property Name="wednesday" Type="Boolean" />
+          <Property Name="thursday" Type="Boolean" />
+          <Property Name="friday" Type="Boolean" />
+          <Property Name="saturday" Type="Boolean" />
+          <Property Name="sunday" Type="Boolean" />
+          <Property Name="start_date" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="end_date" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Calendar_dates">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="C_service_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="date" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="exception_type" Type="Byte" />
+        </EntityType>
+        <EntityType Name="Route">
+          <Key>
+            <PropertyRef Name="C_route_id" />
+          </Key>
+          <Property Name="C_route_id" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="agency_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="route_short_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="route_long_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="route_type" Type="Byte" />
+        </EntityType>
+        <EntityType Name="Shape">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="C_shape_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="shape_pt_lat" Type="Double" />
+          <Property Name="shape_pt_lon" Type="Double" />
+          <Property Name="shape_pt_sequence" Type="Int16" />
+          <Property Name="shape_dist_traveled" Type="Double" />
+        </EntityType>
+        <EntityType Name="Stop_times">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="C_trip_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="arrival_time" Type="DateTime" Precision="3" />
+          <Property Name="departure_time" Type="DateTime" Precision="3" />
+          <Property Name="stop_id" Type="Int32" />
+          <Property Name="stop_sequence" Type="Int16" />
+          <Property Name="stop_headsign" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="pickup_type" Type="Byte" />
+          <Property Name="drop_off_type" Type="Byte" />
+          <Property Name="shape_dist_traveled" Type="Double" />
+        </EntityType>
+        <EntityType Name="Stop">
+          <Key>
+            <PropertyRef Name="C_stop_id" />
+          </Key>
+          <Property Name="C_stop_id" Type="Int32" Nullable="false" />
+          <Property Name="stop_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="stop_lat" Type="Double" />
+          <Property Name="stop_lon" Type="Double" />
+        </EntityType>
+        <EntityType Name="Trip">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="C_route_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="service_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="trip_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="shape_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="trip_headsign" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="direction_id" Type="Boolean" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ModelsStoreContainer" CdmEntityContainer="TrackTracker">
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="Models.Store.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="Models.Store.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="Models.Store.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="Models.Store.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Models.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="Models.Store.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Models.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="Models.Store.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="Models.Store.sp_upgraddiagrams" />
+          <EntitySetMapping Name="Calendars">
+            <EntityTypeMapping TypeName="Models.Calendar">
+              <MappingFragment StoreEntitySet="Calendar">
+                <ScalarProperty Name="end_date" ColumnName="end_date" />
+                <ScalarProperty Name="start_date" ColumnName="start_date" />
+                <ScalarProperty Name="sunday" ColumnName="sunday" />
+                <ScalarProperty Name="saturday" ColumnName="saturday" />
+                <ScalarProperty Name="friday" ColumnName="friday" />
+                <ScalarProperty Name="thursday" ColumnName="thursday" />
+                <ScalarProperty Name="wednesday" ColumnName="wednesday" />
+                <ScalarProperty Name="tuesday" ColumnName="tuesday" />
+                <ScalarProperty Name="monday" ColumnName="monday" />
+                <ScalarProperty Name="C_service_id" ColumnName="﻿service_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Calendar_dates">
+            <EntityTypeMapping TypeName="Models.Calendar_dates">
+              <MappingFragment StoreEntitySet="Calendar_dates">
+                <ScalarProperty Name="exception_type" ColumnName="exception_type" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="C_service_id" ColumnName="﻿service_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Routes">
+            <EntityTypeMapping TypeName="Models.Route">
+              <MappingFragment StoreEntitySet="Routes">
+                <ScalarProperty Name="route_type" ColumnName="route_type" />
+                <ScalarProperty Name="route_long_name" ColumnName="route_long_name" />
+                <ScalarProperty Name="route_short_name" ColumnName="route_short_name" />
+                <ScalarProperty Name="agency_id" ColumnName="agency_id" />
+                <ScalarProperty Name="C_route_id" ColumnName="﻿route_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Shapes">
+            <EntityTypeMapping TypeName="Models.Shape">
+              <MappingFragment StoreEntitySet="Shapes">
+                <ScalarProperty Name="shape_dist_traveled" ColumnName="shape_dist_traveled" />
+                <ScalarProperty Name="shape_pt_sequence" ColumnName="shape_pt_sequence" />
+                <ScalarProperty Name="shape_pt_lon" ColumnName="shape_pt_lon" />
+                <ScalarProperty Name="shape_pt_lat" ColumnName="shape_pt_lat" />
+                <ScalarProperty Name="C_shape_id" ColumnName="﻿shape_id" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Stop_times">
+            <EntityTypeMapping TypeName="Models.Stop_times">
+              <MappingFragment StoreEntitySet="Stop_times">
+                <ScalarProperty Name="shape_dist_traveled" ColumnName="shape_dist_traveled" />
+                <ScalarProperty Name="drop_off_type" ColumnName="drop_off_type" />
+                <ScalarProperty Name="pickup_type" ColumnName="pickup_type" />
+                <ScalarProperty Name="stop_headsign" ColumnName="stop_headsign" />
+                <ScalarProperty Name="stop_sequence" ColumnName="stop_sequence" />
+                <ScalarProperty Name="stop_id" ColumnName="stop_id" />
+                <ScalarProperty Name="departure_time" ColumnName="departure_time" />
+                <ScalarProperty Name="arrival_time" ColumnName="arrival_time" />
+                <ScalarProperty Name="C_trip_id" ColumnName="﻿trip_id" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Stops">
+            <EntityTypeMapping TypeName="Models.Stop">
+              <MappingFragment StoreEntitySet="Stops">
+                <ScalarProperty Name="stop_lon" ColumnName="stop_lon" />
+                <ScalarProperty Name="stop_lat" ColumnName="stop_lat" />
+                <ScalarProperty Name="stop_name" ColumnName="stop_name" />
+                <ScalarProperty Name="C_stop_id" ColumnName="﻿stop_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Trips">
+            <EntityTypeMapping TypeName="Models.Trip">
+              <MappingFragment StoreEntitySet="Trips">
+                <ScalarProperty Name="direction_id" ColumnName="direction_id" />
+                <ScalarProperty Name="trip_headsign" ColumnName="trip_headsign" />
+                <ScalarProperty Name="shape_id" ColumnName="shape_id" />
+                <ScalarProperty Name="trip_id" ColumnName="trip_id" />
+                <ScalarProperty Name="service_id" ColumnName="service_id" />
+                <ScalarProperty Name="C_route_id" ColumnName="﻿route_id" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
