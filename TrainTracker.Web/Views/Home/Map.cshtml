@@ -16,27 +16,25 @@
 <h2>Map</h2>
 
 @section scripts{
+    <script src="~/Scripts/JQuery.Easing.js"></script>
     <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBblUvtCvX4S99whslm-TsWyjVMdlM2eBo&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBblUvtCvX4S99whslm-TsWyjVMdlM2eBo"></script>
+    <script src="~/Scripts/MarkerAnimiate.js"></script>
+    <script src="~/Scripts/SlidingMarker.js"></script>
     <script src="~/signalr/hubs"></script>
     <script>
         var map;
         var trainHub = null;
         var markers = [];
         var poly = null;
-        var hour = 0;
-        var min = 0;
-        var sec = 0;
-        function initMap() {
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: -34.397, lng: 150.644 },
-                zoom: 8
-            });
-        }
+        var delay = 1000;
+        var lastRequestTime;
         function addMarker(location) {
-            var marker = new google.maps.Marker({
+            var marker = new SlidingMarker({
                 position: location,
-                map: map
+                duration: delay,
+                map: map,
+                easing: "jswing"
             });
             markers.push(marker);
         }
@@ -61,10 +59,15 @@
 
         function RequestData(tripId, time) {
             trainHub.server.requestTrainLocations(tripId, time);
+            lastRequestTime = new Date();
         }
 
         function update() {
-            sec += 10;
+            var values = $("#time").val().split(":");
+            var hour = parseInt(values[0]);
+            var min = parseInt(values[1]);
+            var sec = parseInt(values[2]);
+            sec += 1;
             if (sec >= 60) {
                 sec = 0;
                 min++;
@@ -78,44 +81,48 @@
             }
             $("#time").val(hour + ":" + min + ":" + sec);
             RequestData($("#message").val(), $("#time").val());
-            setTimeout(update, 1000);
+            setTimeout(update, delay);
         }
 
-        $(function() {
+        $(function () {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: -34.397, lng: 150.644 },
+                zoom: 8
+            });
             // Reference the auto-generated proxy for the hub.
             trainHub = $.connection.trainHub;
             // Create a function that the hub can call back to display messages.
-            trainHub.client.updateTrainLocations = function(lastStopStop, nextStopStop, shapesUntilNextStation, trainPos) {
-                deleteMarkers();
-
-                var path = [];
-                for (var i = 0; i < shapesUntilNextStation.length; i++) {
-                    path.push({ lat: shapesUntilNextStation[i].shape_pt_lat, lng: shapesUntilNextStation[i].shape_pt_lon });
+            trainHub.client.updateTrainLocations = function(lastStopStop, nextStopStop, trainPos) {
+                var currentTime = new Date();
+                var difTime = currentTime.getTime() - lastRequestTime.getTime();
+                if (markers.length < 1) {
+                    addMarker({ lat: lastStopStop.stop_lat, lng: lastStopStop.stop_lon });
+                    addMarker({ lat: nextStopStop.stop_lat, lng: nextStopStop.stop_lon });
+                    addMarker({ lat: trainPos.Latitude, lng: trainPos.Longitude });
+                    setMapOnAll(map);
+                } else {
+                    markers[0].setPosition({ lat: lastStopStop.stop_lat, lng: lastStopStop.stop_lon });
+                    markers[1].setPosition({ lat: nextStopStop.stop_lat, lng: nextStopStop.stop_lon });
+                    markers[2].setDuration(delay + difTime);
+                    markers[2].setPosition({ lat: trainPos.Latitude, lng: trainPos.Longitude });
                 }
 
-                addMarker({ lat: lastStopStop.stop_lat, lng: lastStopStop.stop_lon });
-                addMarker({ lat: nextStopStop.stop_lat, lng: nextStopStop.stop_lon });
-                addMarker({ lat: trainPos.Latitude, lng: trainPos.Longitude });
-                setMapOnAll(map);
-                map.setCenter({ lat: trainPos.Latitude, lng: trainPos.Longitude });
+               // map.setCenter({ lat: trainPos.Latitude, lng: trainPos.Longitude });
             };
-            $.connection.hub.start().done(function () {
-                var values = $("#time").val().split(":");
-                hour = parseInt(values[0]);
-                min = parseInt(values[1]);
-                sec = parseInt(values[2]);
+            $.connection.hub.start().done(function() {
+
 
                 $('#sendmessage').click(function() {
                     // Call the Send method on the hub.
                     RequestData($("#message").val(), $("#time").val());
                     // Clear text box and reset focus for next comment.
                 });
-                $('#startTimer').click(function () {
+                $('#startTimer').click(function() {
                     // Call the Send method on the hub.
-                    setTimeout(update, 1000);
+                    setTimeout(update, delay);
                     // Clear text box and reset focus for next comment.
                 });
             });
-            });
+        });
     </script>
 }

@@ -50,7 +50,7 @@ namespace TrainTracker.Web.Hubs
 
             var trainPos = CalculateTrainPosistion(timeNow, lastStop, nextStop, shapesUntilNextStation);
 
-            Clients.Caller.updateTrainLocations(lastStopStop, nextStopStop, shapesUntilNextStation, trainPos);
+            Clients.Caller.updateTrainLocations(lastStopStop, nextStopStop, trainPos);
         }
 
         private static LatLng CalculateTrainPosistion(DateTime timeNow, Stop_times lastStop, Stop_times nextStop, List<Shape> shapesUntilNextStation)
@@ -114,8 +114,14 @@ namespace TrainTracker.Web.Hubs
 
     public class UpdateTrain
     {
-        public Shape[] Shapes { get; set; }
-        public Train Train { get; set; }
+        public Bounds Bounds { get; set; }
+        public Train[] Train { get; set; }
+    }
+
+    public class Bounds
+    {
+        public LatLng NorthWest { get; set; }
+        public LatLng SouthEast { get; set; }
     }
 
     public class Train

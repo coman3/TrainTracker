@@ -41,32 +41,18 @@ namespace TrainTracker.Web.Helpers
         }
         public static double CalculateBearing(double lat1, double lon1, double lat2, double lon2)
         {
-            //var yb = Math.Sin(lon2 - lon1) * Math.Cos(lat2);
-            //var xb = Math.Cos(lat1) * Math.Sin(lat2) -
-            //         Math.Sin(lat1) * Math.Cos(lat2) * Math.Cos(lon2 - lon1);
-            //var brng = Math.Atan2(yb, xb);
-            //return brng;
-            //----
 
             var φ1 = lat1.ToRadians();
             var φ2 = lat2.ToRadians();
             var Δλ = (lon2 - lon1).ToRadians();
 
-            // see http://mathforum.org/library/drmath/view/55417.html
             var y = Math.Sin(Δλ) * Math.Cos(φ2);
             var x = Math.Cos(φ1) * Math.Sin(φ2) -
                     Math.Sin(φ1) * Math.Cos(φ2) * Math.Cos(Δλ);
             var θ = Math.Atan2(y, x);
 
             return (θ.ToDegrees() + 360) % 360;
-
-            //----
-            //var Δψ = Math.Log(Math.Tan(Math.PI / 4 + lat2 / 2) / Math.Tan(Math.PI / 4 + lat1 / 2));
-
-            //// if dLon over 180° take shorter rhumb line across the anti-meridian:
-            //if (Math.Abs(lon1) > Math.PI) lon1 = lon1 > 0 ? -(2 * Math.PI - lon1) : (2 * Math.PI + lon1);
-
-            //return Math.Atan2(lon1, Δψ);
         }
     }
 }
+// see http://mathforum.org/library/drmath/view/55417.html
