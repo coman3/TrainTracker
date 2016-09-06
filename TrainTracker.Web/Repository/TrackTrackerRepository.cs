@@ -15,8 +15,13 @@ namespace TrainTracker.Web.Repository
         public DbSet<Stop> Stops => _dbContext.Stops;
         public DbSet<Trip> Trips => _dbContext.Trips;
         public DbSet<Stop_times> StopTimes => _dbContext.Stop_times;
-        public DbSet<Calendar> Calendars => _dbContext.Calendars;
-        public DbSet<Calendar_dates> CalendarDates => _dbContext.Calendar_dates;
+
+        public List<Calendar> Calendars =>
+            _calendars ?? (_calendars = _dbContext.Calendars.ToList());
+        private List<Calendar> _calendars;
+        public List<Calendar_dates> CalendarDates => 
+            _calendarDates ?? (_calendarDates = _dbContext.Calendar_dates.ToList());
+        private List<Calendar_dates> _calendarDates;
 
         public TrackTrackerRepository()
         {
@@ -57,35 +62,59 @@ namespace TrainTracker.Web.Repository
 
         public bool IsTripRunning(Trip trip, DateTime? atTime = null)
         {
+            var result = false;
             if (atTime == null)
                 atTime = DateTime.Now;
-            var calDate = CalendarDates.ToList().Any(
+
+            result = CalendarDates.Any(
                     x => x.service_id == trip.service_id &&
                      x.date == atTime.Value.ToString("yyyyMMdd") &&
                       x.exception_type == 2);
-            if (calDate) return false;
+            if (result) return false;
 
             var cal = Calendars.First(x => x.service_id == trip.service_id);
             var day = atTime.Value.DayOfWeek;
             switch (day)
             {
                 case DayOfWeek.Sunday:
-                    return cal.sunday;
+                    result = cal.sunday;
+                    break;
                 case DayOfWeek.Monday:
-                    return  cal.monday;
+                    result = cal.monday;
+                    break;
                 case DayOfWeek.Tuesday:
-                    return cal.tuesday;
+                    result = cal.tuesday;
+                    break;
                 case DayOfWeek.Wednesday:
-                    return cal.wednesday;
+                    result = cal.wednesday;
+                    break;
                 case DayOfWeek.Thursday:
-                    return cal.thursday;
+                    result = cal.thursday;
+                    break;
                 case DayOfWeek.Friday:
-                    return cal.friday;
+                    result = cal.friday;
+                    break;
                 case DayOfWeek.Saturday:
-                    return cal.saturday;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                    result = cal.saturday;
+                    break;
             }
+            return result;
+
+            //TODO
+            //var stopTimes = StopTimes.Where(x => x.trip_id == trip.trip_id).OrderBy(x=> x.arrival_time).ToList();
+            //if (stopTimes.Count(x => x.arrival_time.HasValue || x.departure_time.HasValue) < 1) return false;
+
+            //var first = stopTimes.First(x => x.departure_time.HasValue);
+            //var last = stopTimes.Last(x => x.departure_time.HasValue);
+            
+
+            //if (first.arrival_time.Value.TimeOfDay < atTime.Value.TimeOfDay && atTime.Value.TimeOfDay < last.arrival_time.Value.TimeOfDay)
+            //{
+            //    result = true;
+            //}
+
+            //return result;
+
         }
 
         public IEnumerable<Trip> GetStopTrips(Stop stop)
