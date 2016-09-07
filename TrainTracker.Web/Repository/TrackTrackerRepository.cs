@@ -13,7 +13,8 @@ namespace TrainTracker.Web.Repository
         public DbSet<Route> Routes => _dbContext.Routes;
         public DbSet<Shape> Shapes => _dbContext.Shapes;
         public DbSet<Stop> Stops => _dbContext.Stops;
-        public DbSet<Trip> Trips => _dbContext.Trips;
+        public List<Trip> Trips => _trips ?? (_trips = _dbContext.Trips.ToList());
+        private List<Trip> _trips;
         public DbSet<Stop_times> StopTimes => _dbContext.Stop_times;
 
         public List<Calendar> Calendars =>
@@ -26,7 +27,6 @@ namespace TrainTracker.Web.Repository
         public TrackTrackerRepository()
         {
             _dbContext = new TrackTracker();
-            
         }
 
         public IEnumerable<Trip> GetRouteTrips(Route route, DateTime? filterForDay)

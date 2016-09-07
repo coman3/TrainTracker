@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using TrainTracker.Web.Helpers;
 using TrainTracker.Web.Hubs;
 using TrainTracker.Web.Repository;
@@ -11,6 +13,7 @@ namespace TrainTracker.Web.Models
     {
         public LatLng Posistion { get; set; }
         public Trip Trip { get; set; }
+        public string TripId { get; set; }
         public string TripHeadsign { get; set; }
         public DateTime LastUpdated { get; set; }
         public Stop_times LastStopTime { get; set; }
@@ -20,22 +23,38 @@ namespace TrainTracker.Web.Models
         public List<Stop_times> StopTimes { get; set; }
         public List<Stop> Stops { get; set; }
         public bool Loaded { get; set; }
+        public bool TrainRunning { get; private set; } = true;
+
+        private Task _loadingTask { get; set; }
 
         public void Load(TrackTrackerRepository repository)
         {
-            var tripStops = repository.GetTripStopTimes(Trip).OrderBy(x => x.arrival_time).ToList();
-            StopTimes = tripStops;
+            if (Trip == null)
+            {
+                Trip = repository.Trips.First(x => x.trip_id == TripId);
+                TripHeadsign = Trip.trip_headsign;
+            }
+            if (StopTimes == null)
+                StopTimes = repository.GetTripStopTimes(Trip).OrderBy(x => x.arrival_time).ToList();
+
             TripShapes = repository.GetTripShapes(Trip).ToList();
-            Stops = tripStops.Select(x => repository.Stops.First(s => s.stop_id == x.stop_id)).ToList();
+            Stops = StopTimes.Select(x => repository.Stops.First(s => s.stop_id == x.stop_id)).ToList();
             Loaded = true;
         }
 
         public void Update(DateTime currentTime)
         {
-            if(!Loaded) throw new InvalidOperationException("Train Not Loaded!");
+            if(!Loaded)
+                throw new InvalidOperationException("Train Not Loaded!");
+            if(!IsTrainRunning(currentTime))
+                return;
+
             var lastStopTimeIndex = GetPreviousStopIndex(currentTime, StopTimes);
+            if(lastStopTimeIndex < 0) return;
+            
             LastStopTime = StopTimes[lastStopTimeIndex];
             NextStopTime = StopTimes[lastStopTimeIndex + 1];
+
             var lastStation = Stops.First(x => x.stop_id == LastStopTime.stop_id);
             var nextStation = Stops.First(x => x.stop_id == NextStopTime.stop_id);
 
@@ -56,6 +75,7 @@ namespace TrainTracker.Web.Models
                     .Take(nextStationClosestShapePoint.shape_pt_sequence + 1 -
                           lastStationClosestShapePoint.shape_pt_sequence).ToList();
             Posistion = CalculateTrainPosistion(currentTime, this);
+            LastUpdated = currentTime;
         }
         private static LatLng CalculateTrainPosistion(DateTime currentTime, Train train)
         {
@@ -99,9 +119,30 @@ namespace TrainTracker.Web.Models
 
             return trainPos;
         }
+
+        private bool IsTrainRunning(DateTime currentTime)
+        {
+            var firstStopTime = StopTimes.FirstOrDefault(x => x.departure_time.HasValue);
+            var lastStopTime = StopTimes.LastOrDefault(x => x.arrival_time.HasValue);
+            if (firstStopTime == null || lastStopTime == null)
+            {
+                TrainRunning = false;
+                return false;
+            }
+
+            // ReSharper disable PossibleInvalidOperationException
+            if (firstStopTime.departure_time.Value.TimeOfDay < currentTime.TimeOfDay 
+                && lastStopTime.arrival_time.Value.TimeOfDay > currentTime.TimeOfDay)
+            {
+                TrainRunning = true;
+                return true;
+            }
+            TrainRunning = false;
+            return false;
+        }
         private static int GetPreviousStopIndex(DateTime timeNow, List<Stop_times> tripStops)
         {
-            for (int i = 1; i < tripStops.Count - 2; i++)
+            for (int i = 1; i < tripStops.Count; i++)
             {
                 var currentStop = tripStops[i];
                 if (!currentStop.arrival_time.HasValue) continue;
@@ -111,7 +152,22 @@ namespace TrainTracker.Web.Models
                     return i - 1;
                 }
             }
-            return 0;
+            return -1;
+        }
+
+        public void LoadAsync(TrackTrackerRepository repository)
+        {
+            if (_loadingTask == null)
+            {
+                
+                _loadingTask = Task.Factory.StartNew(() =>
+                {
+                    lock (repository)
+                    {
+                        Load(repository);
+                    }
+                });
+            }
         }
     }
 }

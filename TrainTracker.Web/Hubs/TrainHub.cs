@@ -26,7 +26,7 @@ namespace TrainTracker.Web.Hubs
 
         private void _trainWorker_UpdatedTrains(object sender, EventArgs args)
         {
-            Clients.All.
+            
         }
 
         public void RequestTrainLocations(string tripId, string time)
