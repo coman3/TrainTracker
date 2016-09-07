@@ -35,6 +35,24 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PublishDatabaseSettings>
+      <Objects>
+        <ObjectGroup Name="DefaultConnection-Deployment" Order="1" xmlns="">
+          <Destination Path="Data Source=192.168.0.12%3bInitial Catalog=TrainTracker%3bUser ID=sa%3bPassword=^GHrudk90" />
+          <Object Type="DbFullSql">
+            <PreSource Path="Data Source=DESKTOP-AN18HB3\SQLEXPRESS%3bInitial Catalog=TrainTracker%3bIntegrated Security=True%3bMultipleActiveResultSets=True%3bApplication Name=EntityFramework" ScriptSchema="True" ScriptData="False" CopyAllFullTextCatalogs="False" DriDefaults="True" />
+            <Source Path="obj\Debug\AutoScripts\DefaultConnection-Deployment_SchemaOnly.sql" Transacted="True" />
+          </Object>
+        </ObjectGroup>
+        <ObjectGroup Name="TrackTracker-Deployment" Order="2" xmlns="">
+          <Destination Path="" />
+          <Object Type="DbFullSql">
+            <PreSource Path="Data Source=DESKTOP-AN18HB3\SQLEXPRESS%3bInitial Catalog=TrainTracker%3bIntegrated Security=True%3bApplication Name=EntityFramework" ScriptSchema="True" ScriptData="False" CopyAllFullTextCatalogs="False" DriDefaults="True" />
+            <Source Path="obj\Debug\AutoScripts\TrackTracker-Deployment_SchemaOnly.sql" Transacted="True" />
+          </Object>
+        </ObjectGroup>
+      </Objects>
+    </PublishDatabaseSettings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -256,6 +274,7 @@
     <Compile Include="Helpers\NumericExtensions.cs" />
     <Compile Include="Helpers\PagedApiControler.cs" />
     <Compile Include="Helpers\StringCipher.cs" />
+    <Compile Include="Helpers\TelemetryProcessor.cs" />
     <Compile Include="Models\LatLng.cs" />
     <Compile Include="Models\Train.cs" />
     <Compile Include="Hubs\TrainHub.cs" />
@@ -380,7 +399,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\SlidingMarker.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

@@ -25,10 +25,12 @@ namespace TrainTracker.Web.Models
         public bool Loaded { get; set; }
         public bool TrainRunning { get; private set; } = true;
 
-        private Task _loadingTask { get; set; }
+        private bool _loadingTask { get; set; }
 
         public void Load(TrackTrackerRepository repository)
         {
+            if(Loaded)
+                return;
             if (Trip == null)
             {
                 Trip = repository.Trips.First(x => x.trip_id == TripId);
@@ -36,7 +38,7 @@ namespace TrainTracker.Web.Models
             }
             if (StopTimes == null)
                 StopTimes = repository.GetTripStopTimes(Trip).OrderBy(x => x.arrival_time).ToList();
-
+            
             TripShapes = repository.GetTripShapes(Trip).ToList();
             Stops = StopTimes.Select(x => repository.Stops.First(s => s.stop_id == x.stop_id)).ToList();
             Loaded = true;
@@ -46,8 +48,6 @@ namespace TrainTracker.Web.Models
         {
             if(!Loaded)
                 throw new InvalidOperationException("Train Not Loaded!");
-            if(!IsTrainRunning(currentTime))
-                return;
 
             var lastStopTimeIndex = GetPreviousStopIndex(currentTime, StopTimes);
             if(lastStopTimeIndex < 0) return;
@@ -120,7 +120,7 @@ namespace TrainTracker.Web.Models
             return trainPos;
         }
 
-        private bool IsTrainRunning(DateTime currentTime)
+        public bool IsTrainRunning(DateTime currentTime, TrackTrackerRepository repository )
         {
             var firstStopTime = StopTimes.FirstOrDefault(x => x.departure_time.HasValue);
             var lastStopTime = StopTimes.LastOrDefault(x => x.arrival_time.HasValue);
@@ -135,8 +135,9 @@ namespace TrainTracker.Web.Models
                 && lastStopTime.arrival_time.Value.TimeOfDay > currentTime.TimeOfDay)
             {
                 TrainRunning = true;
-                return true;
+                return repository.IsTripRunning(Trip, currentTime);
             }
+
             TrainRunning = false;
             return false;
         }
@@ -157,10 +158,10 @@ namespace TrainTracker.Web.Models
 
         public void LoadAsync(TrackTrackerRepository repository)
         {
-            if (_loadingTask == null)
+            if (!_loadingTask)
             {
-                
-                _loadingTask = Task.Factory.StartNew(() =>
+                _loadingTask = true;
+                Task.Factory.StartNew(() =>
                 {
                     lock (repository)
                     {

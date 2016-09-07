@@ -16,7 +16,7 @@ namespace TrainTracker.Web.Helpers
     public class TrainWorker
     {
         private DateTime CurrentTime => DateTime.Now;
-        private TimeSpan UpdateInterval => TimeSpan.FromMilliseconds(2000);
+        private TimeSpan UpdateInterval => TimeSpan.FromMilliseconds(500);
         private readonly TrackTrackerRepository _repository = new TrackTrackerRepository();
         private IHubConnectionContext<dynamic> Clients { get; set; }
 
@@ -33,7 +33,6 @@ namespace TrainTracker.Web.Helpers
         #endregion
 
         public List<Train> Trains { get; set; }
-        public event UpdatedTrainHandler UpdatedTrains;
         
         public TrainWorker(IHubConnectionContext<dynamic> clients)
         {
@@ -52,22 +51,20 @@ namespace TrainTracker.Web.Helpers
                     try
                     {
                         if (!HasLoaded) return;
-                        foreach (var train in Trains)
+                        var trains = Trains.Where(x => x.IsTrainRunning(CurrentTime, _repository)).ToList();
+                        foreach (var train in trains)
                         {
                             if (train.Loaded)
                             {
                                 train.Update(CurrentTime);
-                                if(train.TrainRunning)
-                                    Clients.All.trainUpdated(new { Position = train.Posistion, Id = train.TripId, Headsign = train.TripHeadsign});
+                                Clients.All.trainUpdated(new { Position = train.Posistion, Id = train.TripId, Headsign = train.TripHeadsign});
                             }
                             else
                                 train.LoadAsync(_repository);
                         }
-                        UpdatedTrains?.Invoke(this, EventArgs.Empty);
                     }
                     catch (Exception ex)
                     {
-
                         throw;
                     }
                     finally
@@ -110,9 +107,9 @@ namespace TrainTracker.Web.Helpers
                 Loaded = false,
                 LastUpdated = DateTime.MinValue,
                 TripId = tripId,
+                Trip = _repository.Trips.First(x=> x.trip_id == tripId),
                 StopTimes = stopTimes    
             };
         }
     }
-    public delegate void UpdatedTrainHandler(object sender, EventArgs args);
 }

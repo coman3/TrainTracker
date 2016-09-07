@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using TrainTracker.Web.Models;
+using Calendar = TrainTracker.Web.Models.Calendar;
 
 namespace TrainTracker.Web.Repository
 {
@@ -10,13 +12,16 @@ namespace TrainTracker.Web.Repository
     {
         private TrackTracker _dbContext;
 
-        public DbSet<Route> Routes => _dbContext.Routes;
-        public DbSet<Shape> Shapes => _dbContext.Shapes;
-        public DbSet<Stop> Stops => _dbContext.Stops;
+        public List<Route> Routes => _routes ?? (_routes = _dbContext.Routes.ToList());
+        private List<Route> _routes; 
+        public List<Shape> Shapes => _shapes ?? (_shapes = _dbContext.Shapes.ToList());
+        private List<Shape> _shapes;
+        public List<Stop> Stops => _stops ?? (_stops= _dbContext.Stops.ToList());
+        private List<Stop> _stops;
         public List<Trip> Trips => _trips ?? (_trips = _dbContext.Trips.ToList());
         private List<Trip> _trips;
-        public DbSet<Stop_times> StopTimes => _dbContext.Stop_times;
-
+        public List<Stop_times> StopTimes => _stoptimes ?? (_stoptimes =_dbContext.Stop_times.ToList());
+        private List<Stop_times> _stoptimes;
         public List<Calendar> Calendars =>
             _calendars ?? (_calendars = _dbContext.Calendars.ToList());
         private List<Calendar> _calendars;
@@ -62,17 +67,20 @@ namespace TrainTracker.Web.Repository
 
         public bool IsTripRunning(Trip trip, DateTime? atTime = null)
         {
-            var result = false;
             if (atTime == null)
                 atTime = DateTime.Now;
 
-            result = CalendarDates.Any(
-                    x => x.service_id == trip.service_id &&
+            var result = CalendarDates.Any(
+                x => x.service_id == trip.service_id &&
                      x.date == atTime.Value.ToString("yyyyMMdd") &&
-                      x.exception_type == 2);
+                     x.exception_type == 2);
             if (result) return false;
 
-            var cal = Calendars.First(x => x.service_id == trip.service_id);
+            var cal = Calendars.FirstOrDefault(x => x.service_id == trip.service_id &&
+            DateTime.ParseExact(x.start_date, "yyyyMMdd", DateTimeFormatInfo.InvariantInfo) < atTime.Value &&
+            DateTime.ParseExact(x.end_date, "yyyyMMdd", DateTimeFormatInfo.InvariantInfo) > atTime.Value);
+            if (cal == null) return false;
+
             var day = atTime.Value.DayOfWeek;
             switch (day)
             {
