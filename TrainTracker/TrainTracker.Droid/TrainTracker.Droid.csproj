@@ -43,6 +43,7 @@
     <Reference Include="Microsoft.AspNet.SignalR.Client">
       <HintPath>..\..\Components\signalr-2.1.2.2\lib\android\Microsoft.AspNet.SignalR.Client.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\Components\signalr-2.1.2.2\lib\android\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -85,7 +86,9 @@
     <None Include="Assets\AboutAssets.txt" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\Main.axml" />
+    <AndroidResource Include="Resources\layout\Main.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
     <AndroidResource Include="Resources\values\Strings.xml" />
     <AndroidResource Include="Resources\drawable-hdpi\Icon.png" />
     <AndroidResource Include="Resources\drawable-mdpi\Icon.png" />
@@ -106,7 +109,12 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\Train.png" />
   </ItemGroup>
-  <Import Project="..\TrainTracker\TrainTracker.projitems" Label="Shared" Condition="Exists('..\TrainTracker\TrainTracker.projitems')" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\TrainTracker.Models\TrainTracker.csproj">
+      <Project>{16ad930c-fa8e-428d-b410-6d7f246f4c41}</Project>
+      <Name>TrainTracker</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.GooglePlayServices.Basement.29.0.0.2\build\Xamarin.GooglePlayServices.Basement.targets" Condition="Exists('..\..\packages\Xamarin.GooglePlayServices.Basement.29.0.0.2\build\Xamarin.GooglePlayServices.Basement.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

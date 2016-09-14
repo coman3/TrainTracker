@@ -2,8 +2,9 @@
 
 namespace TrainTracker
 {
-	public class MyClass
+	public class TrainServerManager
 	{
+
 		public MyClass ()
 		{
 		}

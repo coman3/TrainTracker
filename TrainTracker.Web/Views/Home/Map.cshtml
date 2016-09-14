@@ -23,8 +23,9 @@
         var poly = null;
         var delay = 1000;
         var lastRequestTime;
+
         function addMarker(id, location) {
-            var marker = new SlidingMarker({
+            var marker = new google.maps.Marker({
                 position: location,
                 duration: delay,
                 map: map,
@@ -35,7 +36,7 @@
 
         // Sets the map on all markers in the array.
         function setMapOnAll(map) {
-            for(var key in markers) {
+            for (var key in markers) {
                 if (markers.hasOwnProperty(key)) {
                     var value = markers[key];
                     value.setMap(map);
@@ -54,25 +55,36 @@
             markers = [];
         }
 
-        $(function () {
+        $(function() {
             map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: -34.397, lng: 150.644 },
-                zoom: 8
+                center: { lat: -37.813637, lng: 144.963089 },
+                zoom: 11
             });
             // Reference the auto-generated proxy for the hub.
             trainHub = $.connection.trainHub;
             // Create a function that the hub can call back to display messages.
-            trainHub.client.trainUpdated = function (train) {
-                if (train == null || train.Position == null) return;
-                if (markers.hasOwnProperty(train.Id)) {
-                    markers[train.Id].setPosition({ lat: train.Position.Latitude, lng: train.Position.Longitude });
-                } else {
-                    addMarker(train.Id, { lat: train.Position.Latitude, lng: train.Position.Longitude });
-                }
-                //map.setCenter({ lat: trainPos.Latitude, lng: trainPos.Longitude });
+            trainHub.client.generateStateChanged = function(state) {
+                console.log(state);
             };
-            $.connection.hub.start().done(function () {
+            trainHub.client.updateTrains = function(trains) {
+                trains.forEach(function (train) {
+                    if (train.Posistion == null) return;
+                    if (markers.hasOwnProperty(train.TripId)) {
+                        markers[train.TripId].setPosition({ lat: train.Posistion.Latitude, lng: train.Posistion.Longitude });
+                    } else {
+                        
+                        addMarker(train.TripId, { lat: train.Posistion.Latitude, lng: train.Posistion.Longitude });
+                    }
+                });
+            };
+            $.connection.hub.start().done(function() {
+                var mapBounds = map.getBounds();
+                trainHub.server.setCenter({ Latitude: mapBounds.getCenter().lat(), Longitude: mapBounds.getCenter().lng() });
 
+                map.addListener('center_changed', function() {
+                    var mapBounds = map.getBounds();
+                    trainHub.server.setCenter({ Latitude: mapBounds.getCenter().lat(), Longitude: mapBounds.getCenter().lng() });
+                });
             });
         });
     </script>

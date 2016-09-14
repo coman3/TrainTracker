@@ -346,8 +346,8 @@ namespace TrainTracker.Droid
 			// aapt resource value: 0x7f07000b
 			public const int dark = 2131165195;
 			
-			// aapt resource value: 0x7f07000d
-			public const int googlemap = 2131165197;
+			// aapt resource value: 0x7f07000e
+			public const int googlemap = 2131165198;
 			
 			// aapt resource value: 0x7f070000
 			public const int hybrid = 2131165184;
@@ -364,6 +364,9 @@ namespace TrainTracker.Droid
 			// aapt resource value: 0x7f070002
 			public const int normal = 2131165186;
 			
+			// aapt resource value: 0x7f07000d
+			public const int relativeLayout1 = 2131165197;
+			
 			// aapt resource value: 0x7f070003
 			public const int satellite = 2131165187;
 			
@@ -372,6 +375,9 @@ namespace TrainTracker.Droid
 			
 			// aapt resource value: 0x7f070004
 			public const int terrain = 2131165188;
+			
+			// aapt resource value: 0x7f07000f
+			public const int toolbar1 = 2131165199;
 			
 			// aapt resource value: 0x7f070009
 			public const int wide = 2131165193;

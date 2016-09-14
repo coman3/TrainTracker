@@ -1,25 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using TrainTracker.Models;
 using TrainTracker.Web.Repository;
 
 namespace TrainTracker.Web.Models
 {
+    [NotMapped]
     public class TripDetails : Trip
     {
+        public TripDetails()
+        {
+            
+        }
         public TripDetails(TrackTrackerRepository repository, Trip trip)
         {
-            Id = trip.ID;
-            trip_id = trip.trip_id;
-            route_id = trip.route_id;
-            shape_id = trip.shape_id;
-            service_id = trip.service_id;
+            TripId = trip.TripId;
+            RouteId = trip.RouteId;
+            ShapeId = trip.ShapeId;
+            ServiceId = trip.ServiceId;
             Route = repository.GetTripRoute(trip);
-            Service = repository.Calendars.First(x => x.service_id == trip.service_id);
-            trip_headsign = trip.trip_headsign;
-            direction_id = trip.direction_id;
+            Service = repository.CalendarsCache.First(x => x.ServiceId == trip.ServiceId);
+            TripHeadsign = trip.TripHeadsign;
+            DirectionId = trip.DirectionId;
         }
-        public int Id { get; set; }
         public Route Route { get; set; }
         public Calendar Service { get; set; }
     }

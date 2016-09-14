@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TrainTracker.Web.Helpers
+namespace TrainTracker.Helpers
 {
     public static class NumericExtensions
     {

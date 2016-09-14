@@ -5,6 +5,7 @@ using System.Web.Http;
 using Newtonsoft.Json.Serialization;
 using TrainTracker.Web.Models;
 using Newtonsoft.Json;
+using TrainTracker.Helpers;
 
 namespace TrainTracker.Web.Helpers
 {

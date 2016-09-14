@@ -4,7 +4,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>aeeddc16-d419-49f0-acd3-b2f6d3ffdb55</ProjectGuid>
+    <ProjectGuid>{AEEDDC16-D419-49F0-ACD3-B2F6D3FFDB55}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>TrainTracker.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
@@ -139,6 +139,11 @@
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
   </ItemGroup>
-  <Import Project="..\TrainTracker\TrainTracker.projitems" Label="Shared" Condition="Exists('..\TrainTracker\TrainTracker.projitems')" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\TrainTracker.Models\TrainTracker.csproj">
+      <Project>{16ad930c-fa8e-428d-b410-6d7f246f4c41}</Project>
+      <Name>TrainTracker</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

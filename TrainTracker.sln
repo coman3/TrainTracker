@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainTracker.iOS", "TrainTr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainTracker.WinPhone", "TrainTracker\TrainTracker.WinPhone\TrainTracker.WinPhone.csproj", "{970AD017-1AA2-4CCE-A024-8E62845DAF87}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TrainTracker", "TrainTracker\TrainTracker\TrainTracker.shproj", "{D7CF7A24-F3E3-4321-AF11-15E19A328DA1}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data Collection", "Data Collection", "{ADC13341-C859-4A7E-877D-5D1988ABBA87}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Train.Station.GeoLocation", "Train.Station.GeoLocation\Train.Station.GeoLocation.csproj", "{34511612-3083-492F-A579-4B5C046F902B}"
@@ -34,13 +32,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{
 		PublishScripts\Templates\TrainTrackerWeb.param.dev.json = PublishScripts\Templates\TrainTrackerWeb.param.dev.json
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainTracker", "TrainTracker.Models\TrainTracker.csproj", "{16AD930C-FA8E-428D-B410-6D7F246F4C41}"
+EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		TrainTracker\TrainTracker\TrainTracker.projitems*{aeeddc16-d419-49f0-acd3-b2f6d3ffdb55}*SharedItemsImports = 4
-		TrainTracker\TrainTracker\TrainTracker.projitems*{970ad017-1aa2-4cce-a024-8e62845daf87}*SharedItemsImports = 4
-		TrainTracker\TrainTracker\TrainTracker.projitems*{d7cf7a24-f3e3-4321-af11-15e19a328da1}*SharedItemsImports = 13
-		TrainTracker\TrainTracker\TrainTracker.projitems*{e281da1b-6141-468b-b9a2-ce88da250f81}*SharedItemsImports = 4
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
@@ -192,6 +186,30 @@ Global
 		{52C41952-FB0B-4ADB-961F-D9DBF0816151}.Release|x64.Build.0 = Release|Any CPU
 		{52C41952-FB0B-4ADB-961F-D9DBF0816151}.Release|x86.ActiveCfg = Release|Any CPU
 		{52C41952-FB0B-4ADB-961F-D9DBF0816151}.Release|x86.Build.0 = Release|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Debug|ARM.Build.0 = Debug|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Debug|x64.Build.0 = Debug|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Debug|x86.Build.0 = Debug|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Release|ARM.ActiveCfg = Release|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Release|ARM.Build.0 = Release|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Release|iPhone.Build.0 = Release|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Release|x64.ActiveCfg = Release|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Release|x64.Build.0 = Release|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Release|x86.ActiveCfg = Release|Any CPU
+		{16AD930C-FA8E-428D-B410-6D7F246F4C41}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -200,7 +218,6 @@ Global
 		{E281DA1B-6141-468B-B9A2-CE88DA250F81} = {E02B9A31-2325-4130-818A-88D6D8BBA996}
 		{AEEDDC16-D419-49F0-ACD3-B2F6D3FFDB55} = {E02B9A31-2325-4130-818A-88D6D8BBA996}
 		{970AD017-1AA2-4CCE-A024-8E62845DAF87} = {E02B9A31-2325-4130-818A-88D6D8BBA996}
-		{D7CF7A24-F3E3-4321-AF11-15E19A328DA1} = {E02B9A31-2325-4130-818A-88D6D8BBA996}
 		{34511612-3083-492F-A579-4B5C046F902B} = {ADC13341-C859-4A7E-877D-5D1988ABBA87}
 		{52C41952-FB0B-4ADB-961F-D9DBF0816151} = {D07C9FD2-38F0-4339-8B66-F37695289CD1}
 		{06B6E25A-FEF9-4D7D-9AA7-E27449486614} = {FB6700A7-F866-47B0-B751-678E19B988F7}

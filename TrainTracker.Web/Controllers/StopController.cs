@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using TrainTracker.Helpers;
+using TrainTracker.Models;
 using TrainTracker.Web.Helpers;
 using TrainTracker.Web.Models;
 using TrainTracker.Web.Repository;
@@ -18,8 +20,8 @@ namespace TrainTracker.Web.Controllers
         protected override PagedList<Stop> GetData(StopRequestData data)
         {
             return PageData(data, 
-                _repository.Stops
-                .OrderBy(x => Maths.Distance(data.NearLatitude, data.NearLongitude, x.stop_lat, x.stop_lon)));
+                _repository.StopsCache
+                .OrderBy(x => Maths.Distance(new LatLng(data.NearLatitude, data.NearLongitude), new LatLng(x.StopLat, x.StopLon))));
         }
 
         public class StopRequestData : RequestData

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using TrainTracker.Models;
 using TrainTracker.Web.Helpers;
 using TrainTracker.Web.Models;
 using TrainTracker.Web.Repository;
@@ -18,9 +19,9 @@ namespace TrainTracker.Web.Controllers
         protected override PagedList<Route> GetData(RouteRequestData data)
         {
             return PageData(data,
-                    _repository.Routes
-                    .Where(x => x.route_type == data.RouteType)
-                    .OrderBy(x => x.route_id));
+                    _repository.RoutesCache
+                    .Where(x => x.RouteType == data.RouteType)
+                    .OrderBy(x => x.RouteId));
         }
 
         public class RouteRequestData : RequestData

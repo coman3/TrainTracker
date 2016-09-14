@@ -3,64 +3,77 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
+using TrainTracker.Models;
 using TrainTracker.Web.Models;
-using Calendar = TrainTracker.Web.Models.Calendar;
+using Calendar = TrainTracker.Models.Calendar;
 
 namespace TrainTracker.Web.Repository
 {
     public class TrackTrackerRepository
     {
-        private TrackTracker _dbContext;
+        private TrainTrackerContext _dbContext;
 
-        public List<Route> Routes => _routes ?? (_routes = _dbContext.Routes.ToList());
-        private List<Route> _routes; 
-        public List<Shape> Shapes => _shapes ?? (_shapes = _dbContext.Shapes.ToList());
+        public DbSet<Route> Routes => _dbContext.Routes;
+        public List<Route> RoutesCache => _routes ?? (_routes = _dbContext.Routes.ToList());
+        private List<Route> _routes;
+
+        public DbSet<Shape> Shapes => _dbContext.Shapes;
+        public List<Shape> ShapesCache => _shapes ?? (_shapes = _dbContext.Shapes.ToList());
         private List<Shape> _shapes;
-        public List<Stop> Stops => _stops ?? (_stops= _dbContext.Stops.ToList());
+
+        public DbSet<Stop> Stops => _dbContext.Stops;
+        public List<Stop> StopsCache => _stops ?? (_stops = _dbContext.Stops.ToList());
         private List<Stop> _stops;
-        public List<Trip> Trips => _trips ?? (_trips = _dbContext.Trips.ToList());
+
+        public DbSet<Trip> Trips => _dbContext.Trips;
+        public List<Trip> TripsCache => _trips ?? (_trips = _dbContext.Trips.ToList());
         private List<Trip> _trips;
-        public List<Stop_times> StopTimes => _stoptimes ?? (_stoptimes =_dbContext.Stop_times.ToList());
-        private List<Stop_times> _stoptimes;
-        public List<Calendar> Calendars =>
-            _calendars ?? (_calendars = _dbContext.Calendars.ToList());
+
+        public DbSet<StopTime> StopTimes => _dbContext.StopTimes;
+        public List<StopTime> StopTimesCache => _stoptimes ?? (_stoptimes =_dbContext.StopTimes.ToList());
+        private List<StopTime> _stoptimes;
+
+        public DbSet<Calendar> Calendars => _dbContext.Calendars;
+        public List<Calendar> CalendarsCache => _calendars ?? (_calendars = _dbContext.Calendars.ToList());
         private List<Calendar> _calendars;
-        public List<Calendar_dates> CalendarDates => 
-            _calendarDates ?? (_calendarDates = _dbContext.Calendar_dates.ToList());
-        private List<Calendar_dates> _calendarDates;
+
+        //public DbSet<CalendarDate> CalendarDates => _dbContext.CalendarDates;
+        public List<CalendarDate> CalendarDatesCache => 
+            _calendarDates ?? (_calendarDates = _dbContext.CalendarDates.ToList());
+        private List<CalendarDate> _calendarDates;
 
         public TrackTrackerRepository()
         {
-            _dbContext = new TrackTracker();
+            _dbContext = new TrainTrackerContext();
         }
 
         public IEnumerable<Trip> GetRouteTrips(Route route, DateTime? filterForDay)
         {
             return
-                Trips.Where(x => x.route_id == route.route_id)
+                TripsCache.Where(x => x.RouteId == route.RouteId)
                     .ToList()
                     .Where(x => !filterForDay.HasValue || IsTripRunning(x, filterForDay));
         }
         public IEnumerable<Shape> GetTripShapes(Trip trip)
         {
-            return Shapes.Where(x => x.shape_id == trip.shape_id).OrderBy(x=> x.shape_pt_sequence);
+            return ShapesCache.Where(x => x.ShapeId == trip.ShapeId).OrderBy(x=> x.ShapePtSequence);
         }
         public Route GetTripRoute(Trip trip)
         {
-            return Routes.First(x => x.route_id == trip.route_id);
+            return RoutesCache.First(x => x.RouteId == trip.RouteId);
         }
         public IEnumerable<Stop> GetTripStops(Trip trip)
         {
             return
-                StopTimes.Where(x => x.trip_id == trip.trip_id)
-                    .SelectMany(x => Stops.Where(t => t.stop_id == x.stop_id));
+                StopTimesCache.Where(x => x.TripId == trip.TripId)
+                    .SelectMany(x => StopsCache.Where(t => t.StopId == x.StopId));
             //Select All Stop Times with tripid = trip.tripid and group to "TripStopTimes"
             //Select all Stops from "TripStopTimes" where stopid is "TripStopTimes".stopid.
         }
-        public IEnumerable<Stop_times> GetTripStopTimes(Trip trip)
+        public IEnumerable<StopTime> GetTripStopTimes(Trip trip)
         {
             return
-                StopTimes.Where(x => x.trip_id == trip.trip_id);
+                StopTimesCache.Where(x => x.TripId == trip.TripId);
             //Select All Stop Times with tripid = trip.tripid and group to "TripStopTimes"
             //Select all Stops from "TripStopTimes" where stopid is "TripStopTimes".stopid.
         }
@@ -70,46 +83,46 @@ namespace TrainTracker.Web.Repository
             if (atTime == null)
                 atTime = DateTime.Now;
 
-            var result = CalendarDates.Any(
-                x => x.service_id == trip.service_id &&
-                     x.date == atTime.Value.ToString("yyyyMMdd") &&
-                     x.exception_type == 2);
+            var result = CalendarDatesCache.Any(
+                x => x.ServiceId == trip.ServiceId &&
+                     x.Date == atTime.Value.ToString("yyyyMMdd") &&
+                     x.ExceptionType == 2);
             if (result) return false;
 
-            var cal = Calendars.FirstOrDefault(x => x.service_id == trip.service_id &&
-            DateTime.ParseExact(x.start_date, "yyyyMMdd", DateTimeFormatInfo.InvariantInfo) < atTime.Value &&
-            DateTime.ParseExact(x.end_date, "yyyyMMdd", DateTimeFormatInfo.InvariantInfo) > atTime.Value);
+            var cal = CalendarsCache.FirstOrDefault(x => x.ServiceId == trip.ServiceId &&
+            DateTime.ParseExact(x.StartDate, "yyyyMMdd", DateTimeFormatInfo.InvariantInfo) < atTime.Value &&
+            DateTime.ParseExact(x.EndDate, "yyyyMMdd", DateTimeFormatInfo.InvariantInfo) > atTime.Value);
             if (cal == null) return false;
 
             var day = atTime.Value.DayOfWeek;
             switch (day)
             {
                 case DayOfWeek.Sunday:
-                    result = cal.sunday;
+                    result = cal.Sunday;
                     break;
                 case DayOfWeek.Monday:
-                    result = cal.monday;
+                    result = cal.Monday;
                     break;
                 case DayOfWeek.Tuesday:
-                    result = cal.tuesday;
+                    result = cal.Tuesday;
                     break;
                 case DayOfWeek.Wednesday:
-                    result = cal.wednesday;
+                    result = cal.Wednesday;
                     break;
                 case DayOfWeek.Thursday:
-                    result = cal.thursday;
+                    result = cal.Thursday;
                     break;
                 case DayOfWeek.Friday:
-                    result = cal.friday;
+                    result = cal.Friday;
                     break;
                 case DayOfWeek.Saturday:
-                    result = cal.saturday;
+                    result = cal.Saturday;
                     break;
             }
             return result;
 
             //TODO
-            //var stopTimes = StopTimes.Where(x => x.trip_id == trip.trip_id).OrderBy(x=> x.arrival_time).ToList();
+            //var stopTimes = StopTimesCache.Where(x => x.trip_id == trip.trip_id).OrderBy(x=> x.arrival_time).ToList();
             //if (stopTimes.Count(x => x.arrival_time.HasValue || x.departure_time.HasValue) < 1) return false;
 
             //var first = stopTimes.First(x => x.departure_time.HasValue);
@@ -125,11 +138,45 @@ namespace TrainTracker.Web.Repository
 
         }
 
+        public void UnloadCache(bool removeCalendarData = false, bool removeStopData = false)
+        {
+            _trips?.Clear();
+            _trips?.TrimExcess();
+            _trips = null;
+
+            _shapes?.Clear();
+            _shapes?.TrimExcess();
+            _shapes = null;
+
+            _routes?.Clear();
+            _routes?.TrimExcess();
+            _routes = null;
+
+            _stoptimes?.Clear();
+            _stoptimes?.TrimExcess();
+            _stoptimes = null;
+            if (removeStopData)
+            {
+                _stops?.Clear();
+                _stops?.TrimExcess();
+                _stops = null;
+            }
+            if (removeCalendarData)
+            {
+                _calendarDates?.Clear();
+                _calendarDates?.TrimExcess();
+                _calendarDates = null;
+                _calendars?.Clear();
+                _calendars?.TrimExcess();
+                _calendars = null;
+            }
+        }
+
         public IEnumerable<Trip> GetStopTrips(Stop stop)
         {
             return
-                StopTimes.Where(x => x.stop_id == stop.stop_id)
-                    .SelectMany(x => Trips.Where(t => t.trip_id == x.trip_id));
+                StopTimesCache.Where(x => x.StopId == stop.StopId)
+                    .SelectMany(x => TripsCache.Where(t => t.TripId == x.TripId));
             //Select All Stop Times with stopid = stop.stopid and group to "StopStopTimes"
             //Select all trips from "StopStopTimes" where tripid is "StopStopTimes".tripid.
         }
